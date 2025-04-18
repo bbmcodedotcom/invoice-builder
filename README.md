@@ -2,7 +2,7 @@
 
 A simple yet powerful **Invoice Generator** built with **Next.js 14** and **Tailwind CSS**, designed to help freelancers and small businesses create professional invoices effortlessly.
 
-![image](https://github.com/bbmcodedotcom/invoice-builder/assets/screenshot.png)
+<img src="assets/screenshot.png" alt="Invoice Generator">
 
 ## ✨ Features
 
