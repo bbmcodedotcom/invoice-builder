@@ -1,334 +1,129 @@
-"use client";
+"use client"
 
-// TODO: allow user to tweak positions
-
-import {
-  Fira_Code,
-  Puppies_Play,
-  Love_Ya_Like_A_Sister,
-} from "next/font/google";
-import Image from "next/image";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import Input from "~/app/_ui/Input";
-import { formatDateStringMDY } from "~/lib/date";
-import { div2png } from "~/lib/div2png";
+import { Fira_Code, Puppies_Play, Love_Ya_Like_A_Sister } from "next/font/google"
+import { useState, useRef, useEffect } from "react"
+import { InvoicePreview } from "@/components/InvoicePreview"
+import { InvoiceForm } from "@/components/InvoiceForm"
+import { Button } from "@/components/ui/button"
+import { Download } from "lucide-react"
+import { formatDateStringMDY } from "@/lib/utils"
+import type { InvoiceData } from "@/types/invoice"
 
 const firaCode = Fira_Code({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
-});
-const puppiesPlay = Puppies_Play({ weight: "400", subsets: ["latin"] });
+})
+
+const puppiesPlay = Puppies_Play({
+  weight: "400",
+  subsets: ["latin"],
+})
+
 const loveYaLikeASister = Love_Ya_Like_A_Sister({
   weight: "400",
   subsets: ["latin"],
-});
+})
 
 export default function Home() {
-  const invoiceRef = useRef<HTMLDivElement>(null);
+  const invoiceRef = useRef<HTMLDivElement>(null)
 
-  const [number, setNumber] = useState(123);
-  const [date, setDate] = useState("September 1, 2021");
-  const [logo, setLogo] = useState(
-    "https://avatars.githubusercontent.com/u/76930306?v=4"
-  );
-  const [website, setWebsite] = useState("www.content.com");
-  const [phone, setPhone] = useState("(123) 456-7890");
-  const [address, setAddress] = useState("500 Main Street, Brooklyn, NY 11211");
-  const [cname, setCName] = useState("Mr. Client");
-  const [cphone, setCPhone] = useState("(123) 456-7890");
-  const [cemail, setcEmail] = useState("email@example.com");
-  const [caddress, setCAddress] = useState(
-    "100 Fifth Avenue, New York, NY 10023"
-  );
-  const [items, setItems] = useState([
-    { item: "1 IGTV Video", price: "$1,000" },
-    { item: "3 Instagram Stories", price: "$650" },
-    { item: "1 Newsletter Shout Out", price: "$350" },
-  ]);
-  const [total, setTotal] = useState("$0");
-  const [bank, setBank] = useState("Best Bank");
-  const [accountName, setAccountName] = useState("Content Creator Inc.");
-  const [accountNumber, setAccountNumber] = useState("123456789");
-  const [routingNumber, setRoutingNumber] = useState("987654321");
-  const [dueDate, setDueDate] = useState("OCTOBER 1, 2021");
+  const [invoiceData, setInvoiceData] = useState<InvoiceData>({
+    number: 123,
+    date: "September 1, 2021",
+    logo: "https://avatars.githubusercontent.com/u/76930306?v=4",
+    website: "www.content.com",
+    phone: "(123) 456-7890",
+    address: "500 Main Street, Brooklyn, NY 11211",
+    client: {
+      name: "Mr. Client",
+      phone: "(123) 456-7890",
+      email: "email@example.com",
+      address: "100 Fifth Avenue, New York, NY 10023",
+    },
+    items: [
+      { item: "1 IGTV Video", price: "$1,000" },
+      { item: "3 Instagram Stories", price: "$650" },
+      { item: "1 Newsletter Shout Out", price: "$350" },
+    ],
+    total: "$2,000",
+    payment: {
+      bank: "Best Bank",
+      accountName: "Content Creator Inc.",
+      accountNumber: "123456789",
+      routingNumber: "987654321",
+    },
+    dueDate: "OCTOBER 1, 2021",
+  })
 
-  const handleDateChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    setDate: (date: string) => void
-  ) => {
-    const date = formatDateStringMDY(e.target.value);
-    setDate(date);
-  };
+  const handleDateChange = (value: string, field: "date" | "dueDate") => {
+    const formattedDate = formatDateStringMDY(value)
+    setInvoiceData((prev) => ({
+      ...prev,
+      [field]: formattedDate,
+    }))
+  }
+
+  const downloadInvoice = () => {
+    const invoice = invoiceRef.current
+    if (!invoice) return
+
+    // Using the div2png function from the original code
+    // This would be imported from your lib
+    if (typeof window !== "undefined" && window.div2png) {
+      window.div2png(invoice, invoiceData.number)
+    } else {
+      console.error("div2png function not available")
+    }
+  }
 
   useEffect(() => {
-    const total = items.reduce((acc, item) => {
-      const price = item.price.replace(/[^0-9.]/g, "");
-      return acc + +price;
-    }, 0);
-    setTotal(`$${total}`);
-  }, [items]);
+    // Calculate total from items
+    const total = invoiceData.items.reduce((acc, item) => {
+      const price = item.price.replace(/[^0-9.]/g, "")
+      return acc + +price
+    }, 0)
+
+    setInvoiceData((prev) => ({
+      ...prev,
+      total: `$${total}`,
+    }))
+  }, [invoiceData.items])
 
   return (
-    <div className="grid grid-cols-[auto,1fr] gap-4">
-      <div
-        className="grid grid-cols-[7rem,35rem] h-max border w-max"
-        style={firaCode.style}
-        ref={invoiceRef}
-      >
-        <header className="relative bg-gradient-to-tl from-green-200 to-blue-200 grid grid-rows-2 grid-cols-1 place-items-center w-[7rem]">
-          <div className="min-w-max -rotate-90 font-semibold text-base text-right">
-            <p>NO. {number}</p>
-            <p>Issued on {date}</p>
-          </div>
-          <div className="min-w-max -rotate-90 font-[400] text-base uppercase">
-            <p>
-              {website} • {phone}
-            </p>
-            <p>{address}</p>
-          </div>
-        </header>
-        <main className="flex flex-col justify-between min-h-screen p-8 bg-[#fffffe]">
-          {/* Header Section */}
-          <section className="grid grid-cols-[1fr,auto,1fr] gap-8">
-            {/* keep this div */}
-            <div></div>
-            <h1
-              className="text-7xl font-bold mt-8"
-              style={loveYaLikeASister.style}
-            >
-              Invoice
-            </h1>
+    <div className="container mx-auto py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center">Professional Invoice Generator</h1>
 
-            <div className="text-center text-xs bg-gradient-to-tl from-green-200 to-blue-200 rounded-full w-24 h-24 flex items-center overflow-hidden">
-              {logo ? (
-                <Image
-                  src={logo}
-                  alt="logo"
-                  className="w-full h-full object-contain"
-                  width={96}
-                  height={96}
-                />
-              ) : (
-                <p>Your logo here!</p>
-              )}
-            </div>
-          </section>
-
-          <hr className="bg-gradient-to-tl from-green-200 to-blue-200 h-2 rounded mt-6 mb-4" />
-
-          {/* Billing Section */}
-          <section className="my-4 text-xs">
-            <h2 className="text-lg font-semibold mb-2">BILLED TO</h2>
-            <p className="font-semibold text-3xl uppercase tracking-wider">
-              {cname}
-            </p>
-            <p>{cphone}</p>
-            <p>{cemail}</p>
-            <p>{caddress}</p>
-          </section>
-
-          {/* Description Section */}
-          <section className="pt-6">
-            <h3 className="text-lg font-bold flex justify-between">
-              <span>DESCRIPTION OF ITEM</span> <span>PRICE</span>
-            </h3>
-            <hr className="bg-gradient-to-tl from-green-200 to-blue-200 h-1 rounded my-2" />
-            {items.map(item => (
-              <div key={item.item} className="flex justify-between">
-                <p>{item.item}</p>
-                <p>{item.price}</p>
-              </div>
-            ))}
-            <hr className="bg-gradient-to-tl from-green-200 to-blue-200 h-1 rounded mt-2" />
-          </section>
-
-          {/* Total Amount Section */}
-          <section className="flex justify-between -mt-4">
-            <h2 className="text-lg font-bold">TOTAL AMOUNT DUE</h2>
-            <p>{total}</p>
-          </section>
-
-          {/* Payment Details Section */}
-          <section className="my-6">
-            <h2 className="text-lg font-bold">PAYMENT DETAILS</h2>
-            {accountName && <p>{accountName}</p>}
-            {bank && <p>{bank}</p>}
-            {accountNumber && <p>Account Number: {accountNumber}</p>}
-            {routingNumber && <p>Routing Number: {routingNumber}</p>}
-          </section>
-
-          {/* Footer Section */}
-          <footer className="text-center flex items-center justify-between w-full">
-            <p className="font-medium">*DUE BY {dueDate}</p>
-            <p style={puppiesPlay.style} className="text-7xl">
-              Thank you!
-            </p>
-          </footer>
-        </main>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 w-max h-[80svh] my-auto border shadow p-4 rounded place-items-center">
-        {/* Number Input */}
-        <Input
-          label="Ticket Number"
-          value={number.toString()}
-          onChange={e => setNumber(+e.target.value)}
-          placeholder="Number"
-          type="number"
-        />
-        {/* Date Input */}
-        <Input
-          label="Date"
-          value={date}
-          onChange={e => handleDateChange(e, setDate)}
-          placeholder="Issue Date"
-          type="date"
-        />
-
-        {/* Logo URL Input */}
-        <Input
-          label="Logo URL"
-          value={logo}
-          onChange={e => setLogo(e.target.value)}
-          placeholder="https://example.com/logo.png"
-        />
-
-        {/* Website Input */}
-        <Input
-          label="Website"
-          value={website}
-          onChange={e => setWebsite(e.target.value)}
-          placeholder="Your Website"
-        />
-
-        {/* Phone Input */}
-        <Input
-          label="Phone"
-          value={phone}
-          onChange={e => setPhone(e.target.value)}
-          placeholder="Phone Number"
-        />
-
-        {/* Address Input */}
-        <Input
-          label="Address"
-          value={address}
-          onChange={e => setAddress(e.target.value)}
-          placeholder="Your Address"
-        />
-
-        {/* Client Name Input */}
-        <Input
-          label="Client Name"
-          value={cname}
-          onChange={e => setCName(e.target.value)}
-          placeholder="Client Name"
-        />
-
-        {/* Client Phone Input */}
-        <Input
-          label="Client Phone"
-          value={cphone}
-          onChange={e => setCPhone(e.target.value)}
-          placeholder="Client Phone Number"
-        />
-
-        {/* Client Email Input */}
-        <Input
-          label="Client Email"
-          value={cemail}
-          onChange={e => setcEmail(e.target.value)}
-          placeholder="Client Email"
-        />
-
-        {/* Client Address Input */}
-        <Input
-          label="Client Address"
-          value={caddress}
-          onChange={e => setCAddress(e.target.value)}
-          placeholder="Client Address"
-        />
-
-        {/* Items List Input */}
-        <div>
-          {items.map((item, i) => (
-            <div key={i} className="flex justify-between">
-              <Input
-                label="Item"
-                value={item.item}
-                onChange={e => {
-                  const newItems = [...items];
-                  newItems[i].item = e.target.value;
-                  setItems(newItems);
-                }}
-                placeholder="Item"
-              />
-              <Input
-                label="Price"
-                value={item.price}
-                onChange={e => {
-                  const newItems = [...items];
-                  newItems[i].price = e.target.value;
-                  setItems(newItems);
-                }}
-                placeholder="Price"
-              />
-            </div>
-          ))}
+      <div className="grid lg:grid-cols-2 gap-8">
+        <div className="order-2 lg:order-1 bg-white rounded-lg shadow-lg overflow-hidden">
+          <InvoicePreview
+            ref={invoiceRef}
+            data={invoiceData}
+            fonts={{
+              firaCode,
+              puppiesPlay,
+              loveYaLikeASister,
+            }}
+          />
         </div>
 
-        {/* Bank Name Input */}
-        <Input
-          label="Bank Name"
-          value={bank}
-          onChange={e => setBank(e.target.value)}
-          placeholder="Bank Name"
-        />
+        <div className="order-1 lg:order-2">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Invoice Details</h2>
+              <Button
+                onClick={downloadInvoice}
+                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download Invoice
+              </Button>
+            </div>
 
-        {/* Account Name Input */}
-        <Input
-          label="Account Name"
-          value={accountName}
-          onChange={e => setAccountName(e.target.value)}
-          placeholder="Account Holder's Name"
-        />
-
-        {/* Account Number Input */}
-        <Input
-          label="Account Number"
-          value={accountNumber}
-          onChange={e => setAccountNumber(e.target.value)}
-          placeholder="Account Number"
-        />
-
-        {/* Routing Number Input */}
-        <Input
-          label="Routing Number"
-          value={routingNumber}
-          onChange={e => setRoutingNumber(e.target.value)}
-          placeholder="Routing Number"
-        />
-
-        {/* Due Date Input */}
-        <Input
-          label="Due Date"
-          value={dueDate}
-          onChange={e => handleDateChange(e, setDueDate)}
-          placeholder="Due Date"
-          type="date"
-        />
-
-        <button
-          onClick={() => {
-            const invoice = invoiceRef.current;
-            if (!invoice) return;
-            div2png(invoice, number);
-          }}
-        >
-          Save
-        </button>
+            <InvoiceForm data={invoiceData} setData={setInvoiceData} onDateChange={handleDateChange} />
+          </div>
+        </div>
       </div>
     </div>
-  );
+  )
 }

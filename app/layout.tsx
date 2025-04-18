@@ -9,7 +9,7 @@ import "@radix-ui/themes/styles.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Invoice Generator",
+  title: "BBMCode - Invoice Builder",
   description: "Generate invoices for your clients",
 };
 
