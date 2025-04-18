@@ -1,6 +1,5 @@
 "use client"
 
-import { Fira_Code, Puppies_Play, Love_Ya_Like_A_Sister } from "next/font/google"
 import { useState, useRef, useEffect } from "react"
 import { InvoicePreview } from "@/components/InvoicePreview"
 import { InvoiceForm } from "@/components/InvoiceForm"
