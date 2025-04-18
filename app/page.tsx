@@ -91,7 +91,7 @@ export default function Home() {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Professional Invoice Generator</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">Invoice Generator</h1>
 
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="order-2 lg:order-1 bg-white rounded-lg overflow-hidden">

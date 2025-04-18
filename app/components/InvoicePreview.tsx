@@ -3,6 +3,7 @@ import { forwardRef } from "react"
 import type { InvoiceData } from "@/types/invoice"
 import { Great_Vibes } from 'next/font/google'
 import { Cinzel_Decorative } from 'next/font/google'
+import { formatCurrency } from "@/lib/utils"
 
 export const greatVibes = Great_Vibes({
   weight: '400',
@@ -77,7 +78,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
           {data.items.map((item, index) => (
             <div key={index} className="flex justify-between">
               <p>{item.item}</p>
-              <p>{item.price}</p>
+              <p>{formatCurrency(Number(item.price), data.currency ?? "VND", "decimal")}</p>
             </div>
           ))}
           <hr className="bg-gradient-to-tl from-cyan-200 to-blue-200 h-1 rounded mt-2" />
@@ -86,7 +87,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
         {/* Total Amount Section */}
         <section className="flex justify-between mt-4">
           <h2 className="text-lg font-bold">TOTAL AMOUNT DUE</h2>
-          <p>{data.currency} {data.total}</p>
+          <p>{formatCurrency(Number(data.total), data.currency ?? "VND")}</p>
         </section>
 
         {/* Payment Details Section */}

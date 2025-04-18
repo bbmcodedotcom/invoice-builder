@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Plus, Trash2 } from "lucide-react"
+import { formatCurrency } from "@/lib/utils"
 
 interface InvoiceFormProps {
   data: InvoiceData
@@ -265,7 +266,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                       id={`price-${index}`}
                       value={item.price}
                       onChange={(e) => handleItemChange(e, index, "price")}
-                      placeholder={`${data.currency} 0.00`}
+                      placeholder={`${data.currency} 0`}
                     />
                   </div>
 
@@ -289,7 +290,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
 
               <div className="flex justify-between items-center font-semibold">
                 <span>Total:</span>
-                <span>{data.currency} {data.total}</span>
+                <span>{formatCurrency(Number(data.total), data.currency ?? "VND")}</span>
               </div>
             </div>
           </CardContent>

@@ -24,3 +24,12 @@ export function div2png(element: HTMLElement, fileName: string | number) {
   console.log("Converting div to PNG", element, fileName)
   // Implementation would go here
 }
+
+export function formatCurrency(value: number, currency: string, style: "currency" | "decimal" | "percent" = "currency") {
+  return new Intl.NumberFormat('en-US', {
+    style: style as "currency" | "decimal" | "percent",
+    currency: currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value)
+}
