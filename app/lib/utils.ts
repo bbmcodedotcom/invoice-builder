@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import html2canvas from "html2canvas"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -18,11 +19,13 @@ export function formatDateStringMDY(dateString: string): string {
   return date.toLocaleDateString("en-US", options)
 }
 
-// This is a placeholder for the div2png function that would be imported
-// from your original code
-export function div2png(element: HTMLElement, fileName: string | number) {
-  console.log("Converting div to PNG", element, fileName)
-  // Implementation would go here
+export async function div2png(element: HTMLElement, fileName: string | number) {
+  const canvas = await html2canvas(element)
+  const dataUrl = canvas.toDataURL("image/png")
+  const link = document.createElement("a")
+  link.href = dataUrl
+  link.download = `${fileName}.png`
+  link.click()
 }
 
 export function formatCurrency(value: number, currency: string, style: "currency" | "decimal" | "percent" = "currency") {
@@ -33,3 +36,11 @@ export function formatCurrency(value: number, currency: string, style: "currency
     maximumFractionDigits: 0,
   }).format(value)
 }
+
+export const formatDate = (date: Date | string) => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};

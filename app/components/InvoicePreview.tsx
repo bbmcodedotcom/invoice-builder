@@ -4,43 +4,45 @@ import type { InvoiceData } from "@/types/invoice"
 import { Great_Vibes } from 'next/font/google'
 import { Cinzel_Decorative } from 'next/font/google'
 import { formatCurrency } from "@/lib/utils"
+import { JetBrains_Mono } from "next/font/google"
 
-export const greatVibes = Great_Vibes({
+const greatVibes = Great_Vibes({
   weight: '400',
   subsets: ['latin'],
 })
 
-export const cinzelDecorative = Cinzel_Decorative({
+const cinzelDecorative = Cinzel_Decorative({
   weight: '400',
   subsets: ['latin'],
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "700"],
+  variable: "--font-jetbrains-mono",
 })
 
 interface InvoicePreviewProps {
   data: InvoiceData
-  fonts: {
-    firaCode: any
-    puppiesPlay: any
-    loveYaLikeASister: any
-  }
 }
 
-export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data, fonts }, ref) => {
-  const { firaCode, puppiesPlay, loveYaLikeASister } = fonts
+export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data }, ref) => {
 
   return (
-    <div className="grid grid-cols-[7rem,35rem] h-max border w-max mx-auto" style={firaCode.style} ref={ref}>
-      <header className="bg-gradient-to-tl from-cyan-200 to-blue-200 grid grid-rows-2 grid-cols-1 place-items-center w-[full]">
-        <div className="min-w-max -rotate-90 font-semibold text-base text-righ -mt-28">
+    <div className={`grid grid-cols-[112px,560px] h-full border w-max mx-auto p-0 m-0 ${jetbrainsMono.className}`} ref={ref}>
+      <header className="bg-gradient-to-tl from-cyan-200 to-blue-200 flex flex-col items-center justify-between w-full mx-auto py-20 pr-5">
+        <div className="min-w-max -rotate-90 font-semibold text-base text-right">
           <p>NO. {data.number}</p>
           <p>{data.date}</p>
         </div>
-        <div className="min-w-max -rotate-90 font-[400] text-base uppercase mb-20">
+        <div className="min-w-max -rotate-90 font-[400] text-base uppercase text-right pl-48">
           <p>
             {data.website} • {data.phone}
           </p>
           <p>{data.address}</p>
         </div>
       </header>
+
       <main className="flex flex-col justify-between min-h-[90%] p-8 bg-white">
         {data.logo && (
           <Image
@@ -63,10 +65,10 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
         {/* Billing Section */}
         <section className="my-4 text-xs">
           <h2 className="text-lg font-semibold mb-2">BILLED TO</h2>
-          <p className="font-semibold text-3xl uppercase tracking-wider">{data.client.name}</p>
+          <p className="font-semibold text-3xl uppercase tracking-wider mb-2">{data.client.name}</p>
           <p>Phone: {data.client.phone}</p>
-          <p>Fb: {data.client.fb}</p>
           <p>Address: {data.client.address}</p>
+          <p>Facebook: {data.client.facebook}</p>
         </section>
 
         {/* Description Section */}

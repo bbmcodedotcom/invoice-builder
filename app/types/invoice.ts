@@ -8,8 +8,8 @@ export interface InvoiceData {
   client: {
     name: string
     phone: string
-    fb: string
     address: string
+    facebook: string
   }
   items: Array<{
     item: string

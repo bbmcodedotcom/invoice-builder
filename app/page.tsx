@@ -6,24 +6,8 @@ import { InvoicePreview } from "@/components/InvoicePreview"
 import { InvoiceForm } from "@/components/InvoiceForm"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
-import { formatDateStringMDY } from "@/lib/utils"
+import { div2png, formatDateStringMDY } from "@/lib/utils"
 import type { InvoiceData } from "@/types/invoice"
-
-const firaCode = Fira_Code({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-})
-
-const puppiesPlay = Puppies_Play({
-  weight: "400",
-  subsets: ["latin"],
-})
-
-const loveYaLikeASister = Love_Ya_Like_A_Sister({
-  weight: "400",
-  subsets: ["latin"],
-})
 
 export default function Home() {
   const invoiceRef = useRef<HTMLDivElement>(null)
@@ -38,15 +22,13 @@ export default function Home() {
     client: {
       name: "Client name",
       phone: "+84 909 909 909",
-      fb: "https://www.facebook.com/edcviet",
+      facebook: "https://www.facebook.com/edcviet",
       address: "123 Main St, HCMC",
     },
     items: [
-      { item: "1 item 1", price: "10000" },
-      { item: "2 item 2", price: "20000" },
-      { item: "3 item 3", price: "30000" },
+      { item: "1 x item 1", price: "10000" },
     ],
-    total: "60000",
+    total: "10000",
     payment: {
       bank: "Vietcombank",
       accountName: "Lang Dinh Thanh Dung",
@@ -67,10 +49,8 @@ export default function Home() {
     const invoice = invoiceRef.current
     if (!invoice) return
 
-    // Using the div2png function from the original code
-    // This would be imported from your lib
-    if (typeof window !== "undefined" && window.div2png) {
-      window.div2png(invoice, invoiceData.number)
+    if (typeof window !== "undefined" && div2png) {
+      div2png(invoice, invoiceData.number)
     } else {
       console.error("div2png function not available")
     }
@@ -93,21 +73,16 @@ export default function Home() {
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-8 text-center">Invoice Generator</h1>
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        <div className="order-2 lg:order-1 bg-white rounded-lg overflow-hidden">
+      <div className="flex flex-col lg:flex-row flex-wrap gap-2 h-full">
+        <div className="order-2 lg:order-1 bg-white rounded-lg overflow-hidden h-full flex-1 min-w-[700px] p-0 m-0">
           <InvoicePreview
             ref={invoiceRef}
             data={invoiceData}
-            fonts={{
-              firaCode,
-              puppiesPlay,
-              loveYaLikeASister,
-            }}
           />
         </div>
 
-        <div className="order-1 lg:order-2">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="order-1 lg:order-2 bg-white rounded-lg flex-1">
+          <div className="bg-white p-6 rounded-lg shadow-lg h-full">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold">Invoice Details</h2>
               <Button
