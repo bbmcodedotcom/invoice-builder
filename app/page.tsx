@@ -29,31 +29,30 @@ export default function Home() {
   const invoiceRef = useRef<HTMLDivElement>(null)
 
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
-    number: 123,
-    date: "September 1, 2021",
-    logo: "https://avatars.githubusercontent.com/u/76930306?v=4",
-    website: "www.content.com",
-    phone: "(123) 456-7890",
-    address: "500 Main Street, Brooklyn, NY 11211",
+    number: "INV-Q1-123",
+    date: "April 18, 2025",
+    logo: "",
+    website: "https://edcviet.com",
+    phone: "+84 342 320 189",
+    address: "Le Thi Rieng St, District 12, HCMC",
     client: {
-      name: "Mr. Client",
-      phone: "(123) 456-7890",
-      email: "email@example.com",
-      address: "100 Fifth Avenue, New York, NY 10023",
+      name: "Client name",
+      phone: "+84 909 909 909",
+      fb: "https://www.facebook.com/edcviet",
+      address: "123 Main St, HCMC",
     },
     items: [
-      { item: "1 IGTV Video", price: "$1,000" },
-      { item: "3 Instagram Stories", price: "$650" },
-      { item: "1 Newsletter Shout Out", price: "$350" },
+      { item: "1 item 1", price: "10000" },
+      { item: "2 item 2", price: "20000" },
+      { item: "3 item 3", price: "30000" },
     ],
-    total: "$2,000",
+    total: "60000",
     payment: {
-      bank: "Best Bank",
-      accountName: "Content Creator Inc.",
-      accountNumber: "123456789",
-      routingNumber: "987654321",
+      bank: "Vietcombank",
+      accountName: "Lang Dinh Thanh Dung",
+      accountNumber: "0911000009327",
     },
-    dueDate: "OCTOBER 1, 2021",
+    currency: "VND",
   })
 
   const handleDateChange = (value: string, field: "date" | "dueDate") => {
@@ -86,16 +85,16 @@ export default function Home() {
 
     setInvoiceData((prev) => ({
       ...prev,
-      total: `$${total}`,
+      total: `${total}`,
     }))
-  }, [invoiceData.items])
+  }, [invoiceData.items, invoiceData.currency])
 
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-8 text-center">Professional Invoice Generator</h1>
 
       <div className="grid lg:grid-cols-2 gap-8">
-        <div className="order-2 lg:order-1 bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="order-2 lg:order-1 bg-white rounded-lg overflow-hidden">
           <InvoicePreview
             ref={invoiceRef}
             data={invoiceData}
@@ -113,7 +112,7 @@ export default function Home() {
               <h2 className="text-xl font-semibold">Invoice Details</h2>
               <Button
                 onClick={downloadInvoice}
-                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
+                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 cursor-pointer"
               >
                 <Download className="mr-2 h-4 w-4" />
                 Download Invoice

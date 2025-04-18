@@ -1,5 +1,5 @@
 export interface InvoiceData {
-  number: number
+  number: string
   date: string
   logo: string
   website: string
@@ -8,7 +8,7 @@ export interface InvoiceData {
   client: {
     name: string
     phone: string
-    email: string
+    fb: string
     address: string
   }
   items: Array<{
@@ -20,7 +20,8 @@ export interface InvoiceData {
     bank: string
     accountName: string
     accountNumber: string
-    routingNumber: string
+    routingNumber?: string
   }
-  dueDate: string
+  dueDate?: string
+  currency?: string
 }

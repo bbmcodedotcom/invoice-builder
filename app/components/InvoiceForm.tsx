@@ -17,6 +17,24 @@ interface InvoiceFormProps {
 }
 
 export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
+  const currencies = [
+    { code: "VND", label: "VND - Vietnamese Dong" },
+    { code: "USD", label: "USD - United States Dollar" },
+    { code: "EUR", label: "EUR - Euro" },
+    { code: "JPY", label: "JPY - Japanese Yen" },
+    { code: "GBP", label: "GBP - British Pound" },
+    { code: "AUD", label: "AUD - Australian Dollar" },
+    { code: "CAD", label: "CAD - Canadian Dollar" },
+    { code: "CHF", label: "CHF - Swiss Franc" },
+    { code: "CNY", label: "CNY - Chinese Yuan" },
+    { code: "HKD", label: "HKD - Hong Kong Dollar" },
+  ];
+  const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setData((prev) => ({
+      ...prev,
+      currency: e.target.value,
+    }))
+  }
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: keyof Omit<InvoiceData, "client" | "items" | "payment">,
@@ -66,7 +84,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
   const addItem = () => {
     setData((prev) => ({
       ...prev,
-      items: [...prev.items, { item: "", price: "$0" }],
+      items: [...prev.items, { item: "", price: "", currency: data.currency }],
     }))
   }
 
@@ -96,12 +114,12 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                 <Label htmlFor="number">Invoice Number</Label>
                 <Input
                   id="number"
-                  type="number"
-                  value={data.number.toString()}
+                  type="text"
+                  value={data.number}
                   onChange={(e) =>
                     setData((prev) => ({
                       ...prev,
-                      number: Number.parseInt(e.target.value),
+                      number: e.target.value,
                     }))
                   }
                 />
@@ -124,7 +142,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                   id="logo"
                   value={data.logo}
                   onChange={(e) => handleChange(e, "logo")}
-                  placeholder="https://example.com/logo.png"
+                  placeholder="https://yourwebsite.com/logo.png"
                 />
               </div>
 
@@ -134,7 +152,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                   id="website"
                   value={data.website}
                   onChange={(e) => handleChange(e, "website")}
-                  placeholder="www.yourbusiness.com"
+                  placeholder="https://yourwebsite.com"
                 />
               </div>
 
@@ -154,7 +172,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                   id="address"
                   value={data.address}
                   onChange={(e) => handleChange(e, "address")}
-                  placeholder="123 Business St, City, State ZIP"
+                  placeholder="111 your address, City, State ZIP"
                 />
               </div>
             </div>
@@ -187,12 +205,12 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="clientEmail">Client Email</Label>
+                <Label htmlFor="clientEmail">Facebook</Label>
                 <Input
                   id="clientEmail"
-                  value={data.client.email}
-                  onChange={(e) => handleClientChange(e, "email")}
-                  placeholder="client@example.com"
+                  value={data.client.fb}
+                  onChange={(e) => handleClientChange(e, "fb")}
+                  placeholder="https://www.facebook.com/yourbusiness"
                 />
               </div>
 
@@ -211,6 +229,21 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
       </TabsContent>
 
       <TabsContent value="items" className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="currency">Currency</Label>
+          <select
+            id="currency"
+            className="w-full border border-input rounded-md p-2 text-sm"
+            value={data.currency}
+            onChange={handleCurrencyChange}
+          >
+            {currencies.map((c) => (
+              <option key={c.code} value={c.code}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </div>
         <Card>
           <CardContent className="pt-6">
             <div className="space-y-6">
@@ -232,7 +265,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                       id={`price-${index}`}
                       value={item.price}
                       onChange={(e) => handleItemChange(e, index, "price")}
-                      placeholder="$0.00"
+                      placeholder={`${data.currency} 0.00`}
                     />
                   </div>
 
@@ -256,7 +289,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
 
               <div className="flex justify-between items-center font-semibold">
                 <span>Total:</span>
-                <span>{data.total}</span>
+                <span>{data.currency} {data.total}</span>
               </div>
             </div>
           </CardContent>
@@ -301,7 +334,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                 <Label htmlFor="routingNumber">Routing Number</Label>
                 <Input
                   id="routingNumber"
-                  value={data.payment.routingNumber}
+                  value={data.payment.routingNumber ?? ""}
                   onChange={(e) => handlePaymentChange(e, "routingNumber")}
                   placeholder="Routing Number"
                 />
@@ -309,7 +342,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
 
               <div className="space-y-2">
                 <Label htmlFor="dueDate">Due Date</Label>
-                <Input id="dueDate" type="date" onChange={(e) => onDateChange(e.target.value, "dueDate")} value={data.dueDate} />
+                <Input id="dueDate" type="date" onChange={(e) => onDateChange(e.target.value, "dueDate")} value={data.dueDate ?? ""} />
               </div>
             </div>
           </CardContent>

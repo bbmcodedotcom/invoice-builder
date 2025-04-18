@@ -1,6 +1,18 @@
 import Image from "next/image"
 import { forwardRef } from "react"
 import type { InvoiceData } from "@/types/invoice"
+import { Great_Vibes } from 'next/font/google'
+import { Cinzel_Decorative } from 'next/font/google'
+
+export const greatVibes = Great_Vibes({
+  weight: '400',
+  subsets: ['latin'],
+})
+
+export const cinzelDecorative = Cinzel_Decorative({
+  weight: '400',
+  subsets: ['latin'],
+})
 
 interface InvoicePreviewProps {
   data: InvoiceData
@@ -16,39 +28,33 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
 
   return (
     <div className="grid grid-cols-[7rem,35rem] h-max border w-max mx-auto" style={firaCode.style} ref={ref}>
-      <header className="relative bg-gradient-to-tl from-cyan-200 to-blue-200 grid grid-rows-2 grid-cols-1 place-items-center w-[7rem]">
-        <div className="min-w-max -rotate-90 font-semibold text-base text-right">
+      <header className="bg-gradient-to-tl from-cyan-200 to-blue-200 grid grid-rows-2 grid-cols-1 place-items-center w-[full]">
+        <div className="min-w-max -rotate-90 font-semibold text-base text-righ -mt-28">
           <p>NO. {data.number}</p>
-          <p>Issued on {data.date}</p>
+          <p>{data.date}</p>
         </div>
-        <div className="min-w-max -rotate-90 font-[400] text-base uppercase">
+        <div className="min-w-max -rotate-90 font-[400] text-base uppercase mb-20">
           <p>
             {data.website} • {data.phone}
           </p>
           <p>{data.address}</p>
         </div>
       </header>
-      <main className="flex flex-col justify-between min-h-screen p-8 bg-[#fffffe]">
+      <main className="flex flex-col justify-between min-h-[90%] p-8 bg-white">
+        {data.logo && (
+          <Image
+            src={data.logo || "/logo/edcviet.png"}
+            alt="logo"
+            className=""
+            width={120}
+            height={120}
+          />
+        )}
         {/* Header Section */}
-        <section className="grid grid-cols-[1fr,auto,1fr] gap-8">
-          <div></div>
-          <h1 className="text-7xl font-bold mt-8" style={loveYaLikeASister.style}>
+        <section className="text-center">
+          <h1 className={`text-6xl font-bold mt-2 ${cinzelDecorative.className}`}>
             Invoice
           </h1>
-
-          <div className="text-center text-xs bg-gradient-to-tl from-cyan-200 to-blue-200 rounded-full w-24 h-24 flex items-center overflow-hidden">
-            {data.logo ? (
-              <Image
-                src={data.logo || "/placeholder.svg"}
-                alt="logo"
-                className="w-full h-full object-contain"
-                width={96}
-                height={96}
-              />
-            ) : (
-              <p>Your logo here!</p>
-            )}
-          </div>
         </section>
 
         <hr className="bg-gradient-to-tl from-cyan-200 to-blue-200 h-2 rounded mt-6 mb-4" />
@@ -57,9 +63,9 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
         <section className="my-4 text-xs">
           <h2 className="text-lg font-semibold mb-2">BILLED TO</h2>
           <p className="font-semibold text-3xl uppercase tracking-wider">{data.client.name}</p>
-          <p>{data.client.phone}</p>
-          <p>{data.client.email}</p>
-          <p>{data.client.address}</p>
+          <p>Phone: {data.client.phone}</p>
+          <p>Fb: {data.client.fb}</p>
+          <p>Address: {data.client.address}</p>
         </section>
 
         {/* Description Section */}
@@ -78,9 +84,9 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
         </section>
 
         {/* Total Amount Section */}
-        <section className="flex justify-between -mt-4">
+        <section className="flex justify-between mt-4">
           <h2 className="text-lg font-bold">TOTAL AMOUNT DUE</h2>
-          <p>{data.total}</p>
+          <p>{data.currency} {data.total}</p>
         </section>
 
         {/* Payment Details Section */}
@@ -89,13 +95,12 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
           {data.payment.accountName && <p>{data.payment.accountName}</p>}
           {data.payment.bank && <p>{data.payment.bank}</p>}
           {data.payment.accountNumber && <p>Account Number: {data.payment.accountNumber}</p>}
-          {data.payment.routingNumber && <p>Routing Number: {data.payment.routingNumber}</p>}
         </section>
 
         {/* Footer Section */}
         <footer className="text-center flex items-center justify-between w-full">
-          <p className="font-medium">*DUE BY {data.dueDate}</p>
-          <p style={puppiesPlay.style} className="text-7xl">
+          <p className="font-medium">{data.dueDate ? `*DUE BY ${data.dueDate}` : ""}</p>
+          <p className={`text-5xl ${greatVibes.className}`}>
             Thank you!
           </p>
         </footer>
