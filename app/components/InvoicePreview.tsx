@@ -95,8 +95,8 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
         {/* Payment Details Section */}
         <section className="my-6">
           <h2 className="text-lg font-bold">PAYMENT DETAILS</h2>
-          {data.payment.accountName && <p>{data.payment.accountName}</p>}
           {data.payment.bank && <p>{data.payment.bank}</p>}
+          {data.payment.accountName && <p>{data.payment.accountName}</p>}
           {data.payment.accountNumber && <p>Account Number: {data.payment.accountNumber}</p>}
         </section>
 

@@ -8,8 +8,15 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { Plus, Trash2 } from "lucide-react"
-import { formatCurrency, formatDate } from "@/lib/utils"
+import { CalendarIcon, Plus, Trash2 } from "lucide-react"
+import { formatCurrency, formatDate, formatDateStringMDY } from "@/lib/utils"
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 interface InvoiceFormProps {
   data: InvoiceData
@@ -123,7 +130,30 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
 
               <div className="space-y-2">
                 <Label htmlFor="date">Issue Date</Label>
-                <Input id="date" type="date" onChange={(e: React.ChangeEvent<HTMLInputElement>) => onDateChange(e.target.value, "date")} value={formatDate(data.date)} />
+                <div className="flex items-center gap-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !data.date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon />
+                        {data.date ? formatDateStringMDY(data.date) : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={new Date(data.date)}
+                        onSelect={(day) => onDateChange(day?.toISOString() ?? "", "date")}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -338,7 +368,30 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
 
               <div className="space-y-2">
                 <Label htmlFor="dueDate">Due Date</Label>
-                <Input id="dueDate" type="date" onChange={(e: React.ChangeEvent<HTMLInputElement>) => onDateChange(e.target.value, "dueDate")} value={formatDate(data.dueDate ?? "")} />
+                <div className="flex items-center gap-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !data.dueDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon />
+                        {data.dueDate ? formatDateStringMDY(data.dueDate) : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={new Date(data.dueDate ?? "")}
+                        onSelect={(day) => onDateChange(day?.toISOString() ?? "", "dueDate")}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
             </div>
           </CardContent>
