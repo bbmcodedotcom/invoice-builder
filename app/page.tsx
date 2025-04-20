@@ -49,7 +49,7 @@ export default function Home() {
     if (!invoice) return
 
     if (typeof window !== "undefined" && div2png) {
-      div2png(invoice, invoiceData.number)
+      div2png(invoice, invoiceData.number ?? "")
     } else {
       console.error("div2png function not available")
     }

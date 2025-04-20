@@ -107,7 +107,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
         number: generateInvoiceCode(),
       }))
     }
-  }, []);
+  }, [data, setData]);
 
   return (
     <Tabs defaultValue="business" className="w-full">
