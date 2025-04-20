@@ -1,5 +1,5 @@
 export interface InvoiceData {
-  number: string
+  number?: string
   date: string
   logo: string
   website: string

@@ -44,3 +44,11 @@ export const formatDate = (date: Date | string) => {
   const day = String(d.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
+
+export function generateInvoiceCode() {
+  const prefix = 'INV';
+  const quarter = 'Q' + Math.ceil((new Date().getMonth() + 1) / 3);
+  const randomNumber = Math.floor(100 + Math.random() * 900);
+
+  return `${prefix}-${quarter}-${randomNumber}`;
+}

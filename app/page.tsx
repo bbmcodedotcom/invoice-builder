@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
 import { div2png, formatDateStringMDY } from "@/lib/utils"
 import type { InvoiceData } from "@/types/invoice"
+import { format } from 'date-fns';
 
 export default function Home() {
   const invoiceRef = useRef<HTMLDivElement>(null)
 
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
-    number: "INV-Q1-123",
-    date: "April 18, 2025",
+    date: format(new Date, 'yyyy-MM-dd'),
     logo: "",
     website: "https://edcviet.com",
     phone: "+84 342 320 189",

@@ -9,8 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Plus, Trash2 } from "lucide-react"
-import { formatCurrency } from "@/lib/utils"
+import { formatCurrency, generateInvoiceCode } from "@/lib/utils"
 import { DatePicker } from "@/components/ui/datepicker"
+import { useEffect } from "react"
 
 interface InvoiceFormProps {
   data: InvoiceData
@@ -99,6 +100,15 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
     }))
   }
 
+  useEffect(() => {
+    if (!data.number) {
+      setData((prev) => ({
+        ...prev,
+        number: generateInvoiceCode(),
+      }))
+    }
+  }, []);
+
   return (
     <Tabs defaultValue="business" className="w-full">
       <TabsList className="grid grid-cols-4 mb-6">
@@ -117,7 +127,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                 <Input
                   id="number"
                   type="text"
-                  value={data.number}
+                  value={data.number ?? ""}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, "number")}
                 />
               </div>
