@@ -13,10 +13,10 @@ export interface InvoiceData {
   }
   items: Array<{
     item: string
-    price: string
+    price: number
   }>
-  discount: string
-  total: string
+  discount: number
+  total: number
   payment: {
     method?: "banking" | "cod"
     bank: string
@@ -25,5 +25,11 @@ export interface InvoiceData {
     routingNumber?: string
   }
   dueDate?: string
-  currency?: string
+  currency?: string,
+  delivery: {
+    companyName: string
+    logo: string,
+    trackingNumber: string
+    cod: number
+  }
 }

@@ -32,6 +32,14 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
     { code: "CNY", label: "CNY - Chinese Yuan" },
     { code: "HKD", label: "HKD - Hong Kong Dollar" },
   ];
+
+  const deliveryCompanies = [
+    { id: "", name: "", logo: "" },
+    { id: "ghtk", name: "Giao Hang Tiet Kiem", logo: "/logo/ghtk.png" },
+    { id: "viettelpost", name: "Viettel post", logo: "/logo/viettelpost.png" },
+    { id: "other", name: "Other", logo: "" },
+  ];
+
   const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setData((prev) => ({
       ...prev,
@@ -90,7 +98,7 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
   const addItem = () => {
     setData((prev) => ({
       ...prev,
-      items: [...prev.items, { item: "", price: "", currency: data.currency }],
+      items: [...prev.items, { item: "", price: 0, currency: data.currency }],
     }))
   }
 
@@ -103,6 +111,30 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
     }))
   }
 
+  const handleDeliveryChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof InvoiceData["delivery"]) => {
+    setData((prev) => ({
+      ...prev,
+      delivery: {
+        ...prev.delivery,
+        [field]: e.target.value,
+      },
+    }))
+  }
+
+  const handleDeliveryCompanyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCompany = deliveryCompanies.find((company) => company.id === e.target.value);
+    if (selectedCompany) {
+      setData((prev) => ({
+        ...prev,
+        delivery: {
+          ...prev.delivery,
+          companyName: selectedCompany.name,
+          logo: selectedCompany.logo,
+        },
+      }));
+    }
+  };
+
   useEffect(() => {
     if (!data.number) {
       setData((prev) => ({
@@ -114,11 +146,12 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
 
   return (
     <Tabs defaultValue="business" className="w-full">
-      <TabsList className="grid grid-cols-4 mb-6">
+      <TabsList className="grid grid-cols-5 mb-6">
         <TabsTrigger value="business">Business</TabsTrigger>
         <TabsTrigger value="client">Client</TabsTrigger>
         <TabsTrigger value="items">Items</TabsTrigger>
         <TabsTrigger value="payment">Payment</TabsTrigger>
+        <TabsTrigger value="delivery">Delivery</TabsTrigger>
       </TabsList>
 
       <TabsContent value="business" className="space-y-4">
@@ -275,6 +308,8 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                     <Label htmlFor={`price-${index}`}>Price</Label>
                     <Input
                       id={`price-${index}`}
+                      type="number"
+                      min={0}
                       value={item.price}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleItemChange(e, index, "price")}
                       placeholder={`${data.currency} 0`}
@@ -303,6 +338,8 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                 <span>Discount:</span>
                 <Input
                   id="discount"
+                  type="number"
+                  min={0}
                   value={data.discount}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, "discount")}
                   placeholder={`${data.currency} 0`}
@@ -386,6 +423,66 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
                   <DatePicker date={data.dueDate ? new Date(data.dueDate) : undefined} setDate={(d) => onDateChange(d?.toISOString() ?? "", "dueDate")} />
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+      <TabsContent value="delivery" className="space-y-4">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="deliveryCompany">Delivery Company</Label>
+                <select
+                  id="deliveryCompany"
+                  className="w-full border border-input rounded-md p-2 text-sm"
+                  value={deliveryCompanies.find(c => c.name === data.delivery?.companyName)?.id ?? "other"}
+                  onChange={handleDeliveryCompanyChange}
+                >
+                  {deliveryCompanies.map((company) => (
+                    <option key={company.id} value={company.id}>
+                      {company.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {data.delivery?.companyName && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="companyName">Company Name</Label>
+                    <Input
+                      id="companyName"
+                      value={data.delivery?.companyName ?? ""}
+                      onChange={(e) => handleDeliveryChange(e, "companyName")}
+                      placeholder="Delivery Company Name"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="trackingNumber">Tracking Number</Label>
+                    <Input
+                      id="trackingNumber"
+                      value={data.delivery?.trackingNumber ?? ""}
+                      onChange={(e) => handleDeliveryChange(e, "trackingNumber")}
+                      placeholder="Tracking Number"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="cod">COD Amount</Label>
+                    <Input
+                      id="cod"
+                      type="number"
+                      min={0}
+                      value={data.delivery?.cod ?? 0}
+                      onChange={(e) => handleDeliveryChange(e, "cod")}
+                      placeholder={`${data.currency} 0`}
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </CardContent>
         </Card>

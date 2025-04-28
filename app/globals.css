@@ -56,6 +56,11 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%
   }
+  :focus,
+  :focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
 }
 
 @layer base {

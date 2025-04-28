@@ -21,20 +21,26 @@ export default function Home() {
     client: {
       name: "Client name",
       phone: "+84 909 909 909",
-      facebook: "https://www.facebook.com/example",
+      facebook: "facebook.com/example",
       address: "123 Main St, HCMC",
     },
     items: [
-      { item: "1 x item 1", price: "10000" },
+      { item: "1 x item 1", price: 10000 },
     ],
-    discount: "0",
-    total: "10000",
+    discount: 0,
+    total: 10000,
     payment: {
       bank: "Example Bank",
       accountName: "Your name",
       accountNumber: "0123456789",
     },
     currency: "VND",
+    delivery: {
+      companyName: "Giao Hang Tiet Kiem",
+      logo: "/logo/ghtk.png",
+      trackingNumber: "1234567890",
+      cod: 0,
+    },
   })
 
   const handleDateChange = (value: string, field: "date" | "dueDate") => {
@@ -59,18 +65,18 @@ export default function Home() {
   useEffect(() => {
     // Calculate total from items
     let total = invoiceData.items.reduce((acc, item) => {
-      const price = item.price.replace(/[^0-9.]/g, "")
+      const price = item.price
       return acc + +price
     }, 0)
     if (invoiceData.discount) {
-      const discount = invoiceData.discount.replace(/[^0-9.]/g, "")
+      const discount = invoiceData.discount
       total -= +discount
     }
     if (total < 0) total = 0
 
     setInvoiceData((prev) => ({
       ...prev,
-      total: `${total}`,
+      total: total,
     }))
   }, [invoiceData.items, invoiceData.currency, invoiceData.discount])
 
@@ -79,7 +85,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold mb-8 text-center">Invoice Generator</h1>
 
       <div className="flex flex-col lg:flex-row flex-wrap gap-2 h-full">
-        <div className="order-2 lg:order-1 bg-white rounded-lg overflow-hidden h-full flex-1 min-w-[700px] p-0 m-0">
+        <div className="order-2 lg:order-1 bg-white rounded-lg overflow-hidden h-full flex-1 min-w-[850px] p-0 m-0">
           <InvoicePreview
             ref={invoiceRef}
             data={invoiceData}

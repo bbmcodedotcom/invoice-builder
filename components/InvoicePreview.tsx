@@ -29,7 +29,7 @@ interface InvoicePreviewProps {
 export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({ data }, ref) => {
 
   return (
-    <div className={`grid grid-cols-[112px,560px] h-full border w-max mx-auto p-0 m-0 ${jetbrainsMono.className}`} ref={ref}>
+    <div className={`grid grid-cols-[120px,702px] h-full border w-max mx-auto p-0 m-0 ${jetbrainsMono.className}`} ref={ref}>
       <header className="bg-gradient-to-tl from-cyan-200 to-blue-200 flex flex-col items-center justify-between w-full mx-auto py-20 pr-5">
         <div className="min-w-max -rotate-90 font-semibold text-base text-right">
           <p>NO. {data.number}</p>
@@ -62,13 +62,38 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
 
         <hr className="bg-gradient-to-tl from-cyan-200 to-blue-200 h-2 rounded mt-6 mb-4" />
 
-        {/* Billing Section */}
-        <section className="my-4 text-xs">
-          <h2 className="text-lg font-semibold mb-2">BILLED TO</h2>
-          <p className="font-semibold text-3xl uppercase tracking-wider mb-2">{data.client.name}</p>
-          <p>Phone: {data.client.phone}</p>
-          <p>Address: {data.client.address}</p>
-          <p>Facebook: {data.client.facebook}</p>
+        {/* Client and Delivery Section */}
+        <section className="my-4 text-xs grid grid-cols-2 gap-8">
+          <div>
+            <h2 className="text-lg font-semibold mb-2">BILLED TO</h2>
+            <p className="font-semibold text-2xl uppercase tracking-wider mb-2">{data.client.name}</p>
+            <p>Phone: {data.client.phone}</p>
+            <p>Address: {data.client.address}</p>
+            <p>Facebook: {data.client.facebook}</p>
+          </div>
+          {data.delivery && data.delivery.companyName && (
+            <div>
+              <h2 className="text-lg font-semibold mb-2">DELIVERY INFO</h2>
+              <div className="flex items-center gap-4 mb-2">
+                {data.delivery.logo && (
+                  <Image
+                    src={data.delivery.logo}
+                    alt={`${data.delivery.companyName} logo`}
+                    width={90}
+                    height={90}
+                    className="object-contain"
+                  />
+                )}
+                <p className="font-semibold text-md uppercase tracking-wider">{data.delivery.companyName}</p>
+              </div>
+              <p>Tracking: {data.delivery.trackingNumber}</p>
+              {data.delivery.cod > 0 && (
+                <p>
+                  COD: {formatCurrency(Number(data.delivery.cod), data.currency ?? "VND")}
+                </p>
+              )}
+            </div>
+          )}
         </section>
 
         {/* Description Section */}
@@ -87,10 +112,12 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
         </section>
 
         {/* Discount Section */}
+        {data.discount > 0 && (
         <section className="flex justify-between mt-4">
           <h2 className="text-lg font-bold">DISCOUNT</h2>
           <p>- {formatCurrency(Number(data.discount), data.currency ?? "VND")}</p>
         </section>
+        )}
 
         {/* Total Amount Section */}
         <section className="flex justify-between mt-4">
