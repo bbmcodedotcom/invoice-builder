@@ -15,23 +15,24 @@ export default function Home() {
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
     date: format(new Date, 'yyyy-MM-dd'),
     logo: "",
-    website: "https://edcviet.com",
-    phone: "+84 342 320 189",
+    website: "https://example.com",
+    phone: "+84 333 888 111",
     address: "Le Thi Rieng St, District 12, HCMC",
     client: {
       name: "Client name",
       phone: "+84 909 909 909",
-      facebook: "https://www.facebook.com/edcviet",
+      facebook: "https://www.facebook.com/example",
       address: "123 Main St, HCMC",
     },
     items: [
       { item: "1 x item 1", price: "10000" },
     ],
+    discount: "0",
     total: "10000",
     payment: {
-      bank: "Vietcombank",
-      accountName: "Lang Dinh Thanh Dung",
-      accountNumber: "0911000009327",
+      bank: "Example Bank",
+      accountName: "Your name",
+      accountNumber: "0123456789",
     },
     currency: "VND",
   })
@@ -57,16 +58,21 @@ export default function Home() {
 
   useEffect(() => {
     // Calculate total from items
-    const total = invoiceData.items.reduce((acc, item) => {
+    let total = invoiceData.items.reduce((acc, item) => {
       const price = item.price.replace(/[^0-9.]/g, "")
       return acc + +price
     }, 0)
+    if (invoiceData.discount) {
+      const discount = invoiceData.discount.replace(/[^0-9.]/g, "")
+      total -= +discount
+    }
+    if (total < 0) total = 0
 
     setInvoiceData((prev) => ({
       ...prev,
       total: `${total}`,
     }))
-  }, [invoiceData.items, invoiceData.currency])
+  }, [invoiceData.items, invoiceData.currency, invoiceData.discount])
 
   return (
     <div className="container mx-auto py-8">

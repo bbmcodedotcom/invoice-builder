@@ -15,8 +15,10 @@ export interface InvoiceData {
     item: string
     price: string
   }>
+  discount: string
   total: string
   payment: {
+    method?: "banking" | "cod"
     bank: string
     accountName: string
     accountNumber: string

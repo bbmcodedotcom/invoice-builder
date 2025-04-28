@@ -58,7 +58,10 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
     }))
   }
 
-  const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof InvoiceData["payment"]) => {
+  const handlePaymentChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    field: keyof InvoiceData["payment"]
+  ) => {
     setData((prev) => ({
       ...prev,
       payment: {
@@ -297,6 +300,17 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
               <Separator />
 
               <div className="flex justify-between items-center font-semibold">
+                <span>Discount:</span>
+                <Input
+                  id="discount"
+                  value={data.discount}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, "discount")}
+                  placeholder={`${data.currency} 0`}
+                  className="w-1/3"
+                />
+              </div>
+
+              <div className="flex justify-between items-center font-semibold">
                 <span>Total:</span>
                 <span>{formatCurrency(Number(data.total), data.currency ?? "VND")}</span>
               </div>
@@ -310,44 +324,61 @@ export function InvoiceForm({ data, setData, onDateChange }: InvoiceFormProps) {
           <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="bank">Bank Name</Label>
-                <Input
-                  id="bank"
-                  value={data.payment.bank}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePaymentChange(e, "bank")}
-                  placeholder="Bank Name"
-                />
+                <Label htmlFor="paymentMethod">Payment Method</Label>
+                <select
+                  id="paymentMethod"
+                  className="w-full border border-input rounded-md p-2 text-sm"
+                  value={data.payment.method ?? "banking"}
+                  onChange={(e) => handlePaymentChange(e, "method")}
+                >
+                  <option value="banking">Banking</option>
+                  <option value="cod">Cash on Delivery (COD)</option>
+                </select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="accountName">Account Name</Label>
-                <Input
-                  id="accountName"
-                  value={data.payment.accountName}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePaymentChange(e, "accountName")}
-                  placeholder="Account Holder Name"
-                />
-              </div>
+              {(data.payment.method ?? "banking") === "banking" && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="bank">Bank Name</Label>
+                    <Input
+                      id="bank"
+                      value={data.payment.bank}
+                      onChange={(e) => handlePaymentChange(e, "bank")}
+                      placeholder="Bank Name"
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="accountNumber">Account Number</Label>
-                <Input
-                  id="accountNumber"
-                  value={data.payment.accountNumber}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePaymentChange(e, "accountNumber")}
-                  placeholder="Account Number"
-                />
-              </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="accountName">Account Name</Label>
+                    <Input
+                      id="accountName"
+                      value={data.payment.accountName}
+                      onChange={(e) => handlePaymentChange(e, "accountName")}
+                      placeholder="Account Holder Name"
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="routingNumber">Routing Number</Label>
-                <Input
-                  id="routingNumber"
-                  value={data.payment.routingNumber ?? ""}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePaymentChange(e, "routingNumber")}
-                  placeholder="Routing Number"
-                />
-              </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="accountNumber">Account Number</Label>
+                    <Input
+                      id="accountNumber"
+                      value={data.payment.accountNumber}
+                      onChange={(e) => handlePaymentChange(e, "accountNumber")}
+                      placeholder="Account Number"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="routingNumber">Routing Number</Label>
+                    <Input
+                      id="routingNumber"
+                      value={data.payment.routingNumber ?? ""}
+                      onChange={(e) => handlePaymentChange(e, "routingNumber")}
+                      placeholder="Routing Number"
+                    />
+                  </div>
+                </>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="dueDate">Due Date</Label>

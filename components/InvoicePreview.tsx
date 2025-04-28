@@ -46,7 +46,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
       <main className="flex flex-col justify-between min-h-[90%] p-8 bg-white">
         {data.logo && (
           <Image
-            src={data.logo || "/logo/edcviet.png"}
+            src={data.logo || "/logo/example.png"}
             alt="logo"
             className=""
             width={120}
@@ -86,6 +86,12 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
           <hr className="bg-gradient-to-tl from-cyan-200 to-blue-200 h-1 rounded mt-2" />
         </section>
 
+        {/* Discount Section */}
+        <section className="flex justify-between mt-4">
+          <h2 className="text-lg font-bold">DISCOUNT</h2>
+          <p>- {formatCurrency(Number(data.discount), data.currency ?? "VND")}</p>
+        </section>
+
         {/* Total Amount Section */}
         <section className="flex justify-between mt-4">
           <h2 className="text-lg font-bold">TOTAL AMOUNT DUE</h2>
@@ -95,9 +101,15 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
         {/* Payment Details Section */}
         <section className="my-6">
           <h2 className="text-lg font-bold">PAYMENT DETAILS</h2>
-          {data.payment.bank && <p>{data.payment.bank}</p>}
-          {data.payment.accountName && <p>{data.payment.accountName}</p>}
-          {data.payment.accountNumber && <p>Account Number: {data.payment.accountNumber}</p>}
+          <p>{data.payment.method === "cod" ? "Cash on Delivery (COD)" : "Bank Transfer"}</p>
+          {(data.payment.method ?? "banking") === "banking" && (
+            <>
+              {data.payment.bank && <p>{data.payment.bank}</p>}
+              {data.payment.accountName && <p>{data.payment.accountName}</p>}
+              {data.payment.accountNumber && <p>Account Number: {data.payment.accountNumber}</p>}
+              {data.payment.routingNumber && <p>Routing Number: {data.payment.routingNumber}</p>}
+            </>
+          )}
         </section>
 
         {/* Footer Section */}
