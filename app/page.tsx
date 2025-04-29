@@ -15,8 +15,8 @@ export default function Home() {
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
     date: format(new Date, 'yyyy-MM-dd'),
     logo: "",
-    website: "https://example.com",
-    phone: "+84 333 888 111",
+    website: "https://edcviet.com",
+    phone: "034 2320 189",
     address: "Le Thi Rieng St, District 12, HCMC",
     client: {
       name: "Client name",

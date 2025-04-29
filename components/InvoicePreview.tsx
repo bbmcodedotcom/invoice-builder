@@ -79,14 +79,14 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
                   <Image
                     src={data.delivery.logo}
                     alt={`${data.delivery.companyName} logo`}
-                    width={90}
-                    height={90}
+                    width={100}
+                    height={100}
                     className="object-contain"
                   />
                 )}
-                <p className="font-semibold text-md uppercase tracking-wider">{data.delivery.companyName}</p>
               </div>
-              <p>Tracking Number: {data.delivery.trackingNumber}</p>
+              <p className="font-semibold text-md uppercase tracking-wider">{data.delivery.companyName}</p>
+              <p className="mt-1">Tracking Number: {data.delivery.trackingNumber}</p>
               {data.delivery.cod > 0 && (
                 <p>
                   COD: {formatCurrency(Number(data.delivery.cod), data.currency ?? "VND")}
