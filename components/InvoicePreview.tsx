@@ -88,7 +88,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
               <p className="font-semibold text-md uppercase tracking-wider">{data.delivery.companyName}</p>
               <p className="mt-1">Tracking Number: {data.delivery.trackingNumber}</p>
               {data.delivery.cod > 0 && (
-                <p>
+                <p className="mt-1">
                   COD: {formatCurrency(Number(data.delivery.cod), data.currency ?? "VND")}
                 </p>
               )}
@@ -121,7 +121,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(({
 
         {/* Total Amount Section */}
         <section className="flex justify-between mt-4">
-          <h2 className="text-lg font-bold">TOTAL AMOUNT DUE</h2>
+          <h2 className="text-lg font-bold">TOTAL</h2>
           <p>{formatCurrency(Number(data.total), data.currency ?? "VND")}</p>
         </section>
 
